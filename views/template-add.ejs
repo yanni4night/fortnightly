@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <div class="container">
+        <!--NAV-->
+        <%include nav.ejs %>
+         <div class="alert alert-info">Input <b><i>name</i></b> and <b><i>content</i></b> to create a new template.</div>
+         <div class="alert alert-danger" id="errMsg" style="display:none;"></div>
+        <form role="form" id="form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" maxLength="20" value="" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+                <label for="editor_id">Content</label>
+                <a style="float:right" href="/template/add?e=html" id="switchEditor" title="Switch Editor">Switch to rich editor</a>
+                <textarea id="editor_id"  class="form-control"  rows="20" placeholder="Enter content">
+                </textarea>
+                <input type="hidden" id="hidden-id" name="_id" value=""/>
+                <input type="hidden" name="content" id="hidden-content">
+            </div>
+            <button type="button" id="submit" class="btn btn-default">Save</button>
+        </form>
+       <%include foot%>
+    </div>
+</body>
+    <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascripts/utils.js?t=201308241007"></script>
+  <script>
+  var template=<%=template%>;
+  </script>
+  <script type="text/javascript" src="/javascripts/template/add.js?t=201308251714"></script>
+</html>

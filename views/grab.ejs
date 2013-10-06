@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/tagit.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <style type="text/css">
+    body{padding-top: 5px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--FORM-->
+        <form role="form" id='form' method='post' accept-charset="utf-8">
+            <div class="form-group">
+                <label for="title">Caption</label>
+                <input type="text" tabIndex="1" class="form-control" id="title" name="title" placeholder="Enter title" value="<%=title%>"/>            
+            </div>
+            <div class="form-group">
+                <label>Url</label>
+                <input type="text" readonly class="form-control" name="url" value="<%=url%>"/>
+            </div>
+            <div class="form-group">
+                <label>Tags</label>
+                <ul id="tagit"></ul>
+            </div>
+            <button type="button" id='saveBtn' class="btn btn-default">Save</button>
+        </form>
+    </div>
+</body>
+    <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script type="text/javascript" src='http://code.jquery.com/ui/1.10.3/jquery-ui.js'></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+    <script type="text/javascript" src="/javascripts/tagit.min.js?t=201308231622"></script>
+    <script type="text/javascript" src="/javascripts/utils.js?t=201308241007"></script>
+    <script type="text/javascript">
+        $('#tagit').tagit();
+        
+        var sending=false;
+        $('#saveBtn').click(function(e){
+            if(!$('#title').val().trim().length){
+                return bootbox.alert("Title required");
+            }else if(!$("#tagit>li").length){
+                return bootbox.alert("Tags required");
+            }else if(sending){
+                return
+            }
+
+            $.ajax({
+                url:"/article/grab",
+                type:'post',
+                data:$("form").serialize(),
+                beforesend:function(){
+                    sending=true;
+                    $("#saveBtn").text("Saving");
+                },
+                success:function(data){
+                    if(1==data.result){                      
+                        window.close();
+                        //window.location=data.url;
+                    }else{
+                        bootbox.alert(data.msg||"Unknown error(s)");
+                    }
+                },
+                error:function(xhr,error){
+                    bootbox.alert(String(error));
+                },
+                complete:function(){
+                    $('#saveBtn').text("Save");
+                    sending=false;
+                }
+            });
+
+
+        });
+    </script>
+</html>

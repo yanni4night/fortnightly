@@ -1,0 +1,77 @@
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index">UFO Fortnightly <span style="font-size:7px;vertical-align: super; font-style:  italic">alpha</span></a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li <%if(typeof pageType!="undefined" && pageType==='add'){%>
+                        class="active"<%}%>>
+                        <a href="/article/add">Add</a>
+                    </li>
+
+                    <li <%if(typeof pageType!="undefined" && pageType==='all'){%>
+                        class="active"<%}%>>
+                        <a href="/article/list">Articles</a>
+                    </li>
+
+                    <li <%if(typeof pageType!="undefined" && pageType==='collection'){%>
+                        class="active"<%}%>>
+                        <a id="menu-collection" href="/article/collection">
+                            Collections(<%if((typeof hasCollection!="undefined") && hasCollection){%><%=hasCollection%><%}else{%>0<%}%>)</a>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search" action='/article/search'>
+                    <div class="form-group">
+                        <input type="text" name="key" class="form-control" placeholder="Search" value="<%if(typeof searchKey!='undefined'){%><%=searchKey%><%}%>"/></div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <!--read page-->
+                    <%if('undefined'!=typeof pageType && 'read'===pageType){%>
+                     <li>
+                         <button type="button" class="btn btn-default navbar-btn collect" data-collect="0" data-aid="<%=data['_id']%>">Collect</button>
+                     </li>
+                     <li>
+                         <a href="/article/edit/<%=data['_id']%>">Edit</a>
+                     </li>
+                     <!-- <li>
+                         <a href="/article/remove/<%=data['_id']%>">Delete</a>
+                     </li> -->
+                    <%}/*if*/%>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Template <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/template/add">Add</a>
+                            </li>
+                            <li>
+                                <a href="/template/list">List</a>
+                            </li>
+                        </ul>
+                    </li>
+                   <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            System <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/help">Help</a>
+                            </li>
+                            <li>
+                                <a href="/about">About</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title>UFO Fortnightly</title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <style type="text/css">body{background: #eee}</style>
+</head>
+<body>
+    <div class="container" style="margin-top:200px">
+        <div class="jumbotron">
+            <div class="container">
+                <div class="alert alert-success"> <strong>Congratulation</strong>
+                   <%if(typeof succmsg!='undefined'){%> <%=succmsg%><%}else{%>Operation succeed!<%}%></div>
+            </div>
+        </div>
+        <%include foot%>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <div class="container">
+        <!--NAV-->
+        <%include nav.ejs %>
+        <!--Alert msg-->
+        <%if(typeof alertMsg!="undefined" && data.length>0){%>
+        <div id="alertmsg" class="alert alert-success"><%=alertMsg%></div>
+        <%}%>
+        <!--Content-->
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8">
+
+                <%if(!data.length){%>
+                <div id="alertmsg" class="alert alert-warning">
+                    No article queried,you can
+                    <a href="/article/add">create one</a>
+                </div>
+                <%}%>
+                <div class="list-group">
+                    <%for(var g =0;g<data.length;++g){
+        var summary=data[g]['summary']||"ERROR";
+        summary=(summary.length>
+                    300)?summary.slice(0,300)+"...":summary;
+        %>
+                <a href="/article/read/<%=data[g]['_id']%>
+                    " class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                        <%=data[g]['title']%></h4>
+                    <p class="list-group-item-text">
+                        <%=summary%></p>
+                </a>
+                <%}%></div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-4">
+            <div id="tagcloud">
+                <ul>
+                    <%if(typeof tagcloud!='undefined'){%>
+                <%for(var e in tagcloud){%>
+                <li><a href="/article/tags/<%=encodeURIComponent(e)%>"><%=e%></a></li>
+                    <%}/*for*/}/*if*/%>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <%if(data.length>0){%>
+    <ul class="pagination" data-currentpage="<%=currentPage%>" data-totalpages="<%=totalPages%>" data-urlprefix="<%=urlPrefix%>">
+    </ul>
+    <%}/*if(data.length>0...*/%>
+    <%include foot%>
+    </div>
+</body>
+<script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.simplePagination.js"></script>
+<script type="text/javascript" src="/javascripts/tagcloud.jquery.js?t=201308251144"></script>
+<script type="text/javascript" src="/javascripts/list.js?t=201308251144"></script>
+</html>

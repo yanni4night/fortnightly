@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/tagit.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <!--NAV-->
+    <%include nav%>
+    <div class="container">
+        <!--FORM-->
+        <form role="form" id='form' method='post' accept-charset="utf-8">
+            <div class="form-group">
+                <label for="title">Caption</label>
+                <input type="text" tabIndex="1" class="form-control" id="title" name="title" placeholder="Enter title"/>            
+            </div>
+            <div class="form-group" id="editor-wrapper">
+                <label>Content</label>
+                <%if('undefined'===typeof article/*add mode*/){%>
+                <a style="float:right" href="/" id="switchEditor" title="Switch Editor"></a>
+                <%}else{%>
+                <textarea class="form-control" rows="20" id="editor_id"></textarea>
+                <%}%>
+            </div>
+            <div class="form-group">
+                <label>Tags</label>
+                <ul id="tagit">
+                </ul>
+            </div>
+            <input type='hidden' name='content' id="content"/>
+            <input type='hidden' name='summary' id="summary"/>
+            <%if(typeof article!='undefined'){%>
+            <input type="hidden" name="_id" id="_id"/>
+            <%}%>
+            <input type='hidden' name='editorType' id="editorType"/>
+            <button type="button" id='saveBtn' class="btn btn-default">Save</button>
+        </form>
+        <%include foot%>
+    </div>
+</body>
+    <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script type="text/javascript" src='http://code.jquery.com/ui/1.10.3/jquery-ui.js'></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+    <script type="text/javascript" src="/javascripts/tagit.min.js?t=201308231622"></script>
+    <script type="text/javascript" src="/javascripts/utils.js?t=201308241007"></script>
+    <%if(typeof article==='undefined'){%>
+    <!--Add mode-->
+    <script type="text/javascript" src="/javascripts/add.js?t=201308231622"></script>
+    <%}else{%>
+    <!--Edit mode-->
+    <script type="text/javascript">var article=<%=article%>;</script>
+    <script type="text/javascript" src="/javascripts/article/edit.js?t=201308281404"></script>
+    <%}%>
+</html>

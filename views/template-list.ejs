@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <div class="container">
+         <!--NAV-->
+        <%include nav.ejs %>
+         <!--Alert msg-->
+        <%if(typeof alertMsg!="undefined" && data.length>0){%>
+        <div class="alert alert-success"><%=alertMsg%></div>
+        <%}%>
+        <%if(!data.length){%>
+        <div class="alert alert-warning">No template(s) found,you could <a href="/template/add">create one</a></div>
+        <%}/*if*/%>
+        <div class="list-group user-list-group">
+        <%for(var g in data){%>
+            <div class="list-group-item" id="tem-<%=data[g]['_id']%>">
+               <h4 class="list-group-item-heading">
+                   <a href="/template/use/<%=data[g]['_id']%>
+                       " target='_blank'>
+                       <%=data[g]['name']%></a>
+                   <a href="/template/edit/<%=data[g]['_id']%>" class="edit  glyphicon glyphicon-edit" title="Edit">M</a>
+                   <a href="#" data-tid="<%=data[g]['_id']%>" class="rm edit  glyphicon glyphicon-remove" title="Remove">R</a>
+               </h4>
+               <p class="list-group-item-text">
+                   <a href="/template/use/<%=data[g]['_id']%>
+                       " target='_blank'><%=data[g]['content']%></a></p>
+            </div>
+        <%}/*for*/%>
+        </div>
+        <%include foot%>
+    </div>
+</body>
+<script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+<script type="text/javascript" src="/javascripts/template/list.js?t=201308272005"></script>
+</html>

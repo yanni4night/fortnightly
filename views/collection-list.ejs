@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title><%=title%></title>
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <div class="container">
+        <!--NAV-->
+        <%include nav.ejs %>
+        <!--Alert msg-->
+        <%if(typeof alertMsg!="undefined" && data.length>0){%>
+        <div id="alertmsg" class="alert alert-success"><%=alertMsg%> You may <a href="/template/list">select</a> a template to render a page</div> 
+        <%}%>
+        <!--Content-->
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8">
+
+                <%if(!data.length){%>
+                <div id="alertmsg" class="alert alert-warning">
+                    No article collected,you can
+                    <a href="/article/list">collect one or more</a>
+                </div>
+                <%}%>
+                <div class="list-group user-list-group">
+                    <%for(var g =0;g<data.length;++g){
+        var summary=data[g]['summary']||"ERROR";
+        summary=(summary.length>
+                    300)?summary.slice(0,300)+"...":summary;
+        %>
+                            <div class="list-group-item" id="tem-<%=data[g]['_id']%>">
+                                <h4 class="list-group-item-heading">
+                                    <a href="/article/read/<%=data[g]['_id']%>
+                                        " target='_blank'>
+                                        <%=data[g]['title']%></a>
+                                    <a href="#" data-aid="<%=data[g]['_id']%>" class="rm edit  glyphicon glyphicon-remove" title="Remove from my collection">R</a>
+                                </h4>
+                                <p class="list-group-item-text">
+                                    <a href="/template/use/<%=data[g]['_id']%>
+                                        " target='_blank'>
+                                        <%=data[g]['summary']%></a>
+                                </p>
+                            </div>
+                <%}%></div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-4">
+            <div id="tagcloud">
+                <ul>
+                    <%if(typeof tagcloud!='undefined'){%>
+                <%for(var e in tagcloud){%>
+                <li><a href="/article/tags/<%=encodeURIComponent(e)%>"><%=e%></a></li>
+                    <%}/*for*/}/*if*/%>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <%include foot%>
+</div>
+</body>
+<script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/bootbox.min.js"></script>
+<script type="text/javascript" src="/javascripts/tagcloud.jquery.js?t=201308251144"></script>
+<script type="text/javascript" src="/javascripts/list.js?t=201308251144"></script>
+</html>
