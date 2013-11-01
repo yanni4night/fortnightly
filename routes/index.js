@@ -9,7 +9,7 @@
 
 var Model=require("../Model");
 var Article=new Model("article");
-var Config=require("../Config");
+var Config=require("../config");
 
 var index = {
     index: function(req, res) {
