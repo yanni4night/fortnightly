@@ -3,9 +3,7 @@
 <head>
     <meta charset='utf-8'/>
     <title>UFO Fortnightly</title>
-    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
-    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <%include res%>
 </head>
 <body>
     <!--NAV-->
@@ -13,9 +11,13 @@
     <div class="container">
         <div class="container">
             <center>
-                <H3>
-                    <%=data['title']%></H3>
+                <H3><%=data['title']%></H3>
             </center>
+            <%if(data['origin']){%>
+            <center>
+                <h6><a href="<%=data['origin']%>"><%=data['origin']%></a></h6>
+            </center>
+            <%}%>
         </div>
         <div class="panel panel-default">
             <div class="panel-body">

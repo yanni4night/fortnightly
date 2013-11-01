@@ -40,6 +40,9 @@ var ArticleModule = {
         var title = req.body.title;
         var content = req.body.content;
         var summary = req.body.summary;
+        var origin = req.body.origin;//todo:validate url
+
+
         var tags = req.body.tags;
         if (!title || !content || !summary) {
             return res.json({
@@ -60,6 +63,7 @@ var ArticleModule = {
             content: content,
             summary: summary,
             tags: tags || "",
+            origin:origin,
             editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
         }, function(err, msg) {
             return res.json({
@@ -121,6 +125,7 @@ var ArticleModule = {
         var content = req.body.content;
         var summary = req.body.summary;
         var tags = req.body.tags;
+        var origin = req.body.origin;//todo:validate
         var _id = req.body._id;
         if (!_id || !title || !content || !summary) {
             return res.json({
@@ -150,6 +155,7 @@ var ArticleModule = {
             content: content,
             summary: summary,
             tags: tags,
+            origin:origin,
             editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
         } /*options*/ , function(err, result) {
             if (err) {
@@ -195,6 +201,8 @@ var ArticleModule = {
                 title: reg
             }, {
                 tags: reg
+            },{
+                origin:reg
             }]
         }, {
             title: "Search for '" + key + "'",
@@ -494,14 +502,14 @@ var ArticleModule = {
     },
     /**
      * Show an article in HTML.Need an id parameter[GET].
-     * @param  {[Request]} req [description]
-     * @param  {[Response]} res [description]
+     * @param  {Request} req [description]
+     * @param  {Response} res [description]
      */
     read: function(req, res) {
         if (typeof req.params['id'] === 'undefined')
             return res.render("error", {
                 errmsg: "No ID found!"
-            }); //res.redirect('/article/list');
+            }); 
 
         if (!/^[a-z0-9]{24}$/.test(req.params['id'])) {
             return res.render('error', {
@@ -552,9 +560,8 @@ var ArticleModule = {
     grabUrl: function(req, res) {
         var title = req.body.title;
         var url = req.body.url;
-        //   var content = req.body.content;
-        // var summary = req.body.summary;
         var tags = req.body.tags;
+
         if (!title || !url) {
             return res.json({
                 result: 0,
@@ -578,7 +585,7 @@ var ArticleModule = {
             }
 
             var content=article.getContent();
-
+            //nightyin:stupid way
             var summary=(content||"Nothing").replace(/<\/?\w+\s?[\s\S]*?>/img,'');
             
             return Article.save({
@@ -586,6 +593,7 @@ var ArticleModule = {
                 content: content,
                 summary: summary,
                 tags: tags || "",
+                origin:url,//2013/11/1-save origin url
                 editorType: "HTML"
             }, function(err, ret) {
                 return res.json({

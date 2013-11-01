@@ -9,6 +9,7 @@
 
 var Model=require("../Model");
 var Article=new Model("article");
+var Config=require("../Config");
 
 var index = {
     index: function(req, res) {
@@ -18,7 +19,8 @@ var index = {
     },
     help: function(req, res) {
         return res.render('help', {
-            title: 'UFO Fortnightly'
+            title: 'UFO Fortnightly',
+            host:Config.serverURL
         });
     },
     about: function(req, res) {

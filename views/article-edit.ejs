@@ -3,11 +3,9 @@
 <head>
     <meta charset='utf-8'/>
     <title><%=title%></title>
-    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' />
-    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css' />
+    <%include res%>
     <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
     <link rel="stylesheet" type="text/css" href="/stylesheets/tagit.css"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
 </head>
 <body>
     <!--NAV-->
@@ -18,6 +16,10 @@
             <div class="form-group">
                 <label for="title">Caption</label>
                 <input type="text" tabIndex="1" class="form-control" id="title" name="title" placeholder="Enter title"/>            
+            </div>
+            <div class="form-group">
+                <label for="origin">Origin</label>
+                <input type="text" tabIndex="1" class="form-control" id="origin" name="origin" placeholder="Enter origin url"/>            
             </div>
             <div class="form-group" id="editor-wrapper">
                 <label>Content</label>

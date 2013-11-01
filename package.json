@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app.js"
   },
+  "author": "yinyong <yanni4night@gmail.com>",
   "dependencies": {
     "express": "3.3.5",
     "ejs": "*",

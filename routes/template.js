@@ -110,8 +110,8 @@ var TemplateModule = {
     }, //save
     /**
      * Remove a template.Need a template id[ALL][AJAX].
-     * @param  {[type]} req [description]
-     * @param  {[type]} res [description]
+     * @param  {Request} req [description]
+     * @param  {Response} res [description]
      */
     remove: function(req, res) {
         var tid = req.param('tid');
@@ -140,9 +140,8 @@ var TemplateModule = {
     },
     /**
      * [modify description]
-     * @param  {[type]} req [description]
-     * @param  {[type]} res [description]
-     * @return {[type]}     [description]
+     * @param  {Request} req [description]
+     * @param  {Response} res [description]
      */
     edit: function(req, res) {
         var tid = req.param("tid");
@@ -175,8 +174,8 @@ var TemplateModule = {
 
     /**
      * Render template with articles.Inner function.
-     * @param  {[Request]}   req      [description]
-     * @param  {[Response]}   res      [description]
+     * @param  {Request}   req      [description]
+     * @param  {Response}   res      [description]
      * @param  {Function} callback [description]
      */
     _render:function(req,res,callback){
@@ -251,14 +250,14 @@ var TemplateModule = {
     },
     /**
      * Mail.Need a mailto[ALL].
-     * @param  {[Request]} req [description]
-     * @param  {[Response]} res [description]
+     * @param  {Request} req [description]
+     * @param  {Response} res [description]
      */
     mail: function(req, res) {
 
-        var myEmail="ufo-fortnightly@qq.com";
-        var smtp="smtp.qq.com";
-        var pwd="sogou-ufo";
+        var myEmail=Config.email;
+        var smtp=Config.smtp;
+        var pwd=Config.emailPwd;
         var mailto=req.param('mailto');
         //Simple validate
         if(!/^\w[\w\.]*\w@\w[\w\.]*\w$/.test(mailto)){
@@ -307,8 +306,8 @@ var TemplateModule = {
     }, //mail
     /**
      * Use template to create a page with articles.
-     * @param  {[type]} req [description]
-     * @param  {[type]} res [description]
+     * @param  {Request} req [description]
+     * @param  {Response} res [description]
      */
     use: function(req, res) {
         return TemplateModule._render(req, res, function(obj) {
