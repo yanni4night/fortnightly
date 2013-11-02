@@ -260,7 +260,7 @@ var TemplateModule = {
         var pwd=Config.emailPwd;
         var mailto=req.param('mailto');
         //Simple validate
-        if(!/^\w[\w\.]*\w@\w[\w\.]*\w$/.test(mailto)){
+        if(!/^\w[\w\.]*\w@\w[\w_\-\.]*\w$/.test(mailto)){
             return res.render("error",{errmsg:"Not a legal email address!"});
         }
 
@@ -285,7 +285,7 @@ var TemplateModule = {
                 }, function(err, message) {
                     if (err) {
                         return res.render("error", {
-                            errmsg: err|message
+                            errmsg: err|"send failed"
                         });
                     }else
                     {   

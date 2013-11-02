@@ -5,7 +5,7 @@
 module.exports={
     serverURL:"http://ufo:3001",
     emailTitle:"UFO Fortnightly",
-    email:"your email address",
-    smtp:"email smtp",
-    emailPwd:"your password"
+    email:"ufo-fortnightly@qq.com",
+    smtp:"smtp.qq.com",
+    emailPwd:"sogou-ufo"
 };
