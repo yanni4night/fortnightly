@@ -13,8 +13,9 @@ function() {
 
             if (typeof article == "undefined") return;
 
-            $("#title").val(article.title);
-            $('#editor_id').val(article.content);
+            $("#title").val(article.title||"");
+            $("#origin").val(article.origin||"");
+            $('#editor_id').val(article.content||"");
             $('#_id').val(article._id);
             $('#editorType').val(article.editorType);
 

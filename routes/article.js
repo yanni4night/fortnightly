@@ -64,6 +64,7 @@ var ArticleModule = {
             summary: summary,
             tags: tags || "",
             origin:origin,
+            createTime:Date.now(),//nightyin:save creating time
             editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
         }, function(err, msg) {
             return res.json({
@@ -151,12 +152,15 @@ var ArticleModule = {
         return Article.update({
             _id: ObjectId(_id)
         } /*selector*/ , {
-            title: title,
+            $set:
+            {title: title,
             content: content,
             summary: summary,
             tags: tags,
             origin:origin,
+            updateTime:Date.now(),//nightyin:save updating time
             editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
+            }
         } /*options*/ , function(err, result) {
             if (err) {
                 return res.json({
@@ -413,6 +417,7 @@ var ArticleModule = {
                 return Article.find(selector /*selector*/ , {
                     skip: (page - 1) * itemsEachPage,
                     limit: itemsEachPage,
+                    sort:{createTime:1},
                     fields: {
                         content: 0,
                         tags: 0
@@ -472,7 +477,7 @@ var ArticleModule = {
                         function renderTemplate() {
                             renderOptions.currentPage = page;
                             renderOptions.totalPages = totalPages;
-                            renderOptions.data = result;
+                            renderOptions.data = result.reverse();
                             renderOptions.tagcloud = tagResultRender;
                             renderOptions.escape = function(d) {
                                 return d; //Do not escape
@@ -593,6 +598,7 @@ var ArticleModule = {
                 content: content,
                 summary: summary,
                 tags: tags || "",
+                createTime:Date.now(),//nightyin:save creating time
                 origin:url,//2013/11/1-save origin url
                 editorType: "HTML"
             }, function(err, ret) {
