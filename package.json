@@ -1,19 +1,22 @@
 {
   "name": "Fortnightly",
-  "version": "0.0.1",
+  "description": "A system for collecting articles and publishing fortnightly",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "author": "yinyong <yanni4night@gmail.com>",
+  "keywords": ["weekly", "fortnightly", "email", "publish", "share", "article"],
+  "repository":"git@github.com:yanni4night/fortnightly.git",
   "dependencies": {
     "express": "3.3.5",
     "ejs": "*",
-    "mongodb":"*",
+    "mongodb": "*",
     "less-middleware": "*",
     "markdown": "*",
-    "connect-mongo":"*",
-    "emailjs":"*",
-    "node-readability":"*"
+    "connect-mongo": "*",
+    "emailjs": "*",
+    "node-readability": "*"
   }
 }
