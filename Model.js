@@ -2,7 +2,7 @@
  * Model module,supports CRUD
  * Copyright(C) Sogou.com UFO
  *
- * @author yinyong@sogou-inc.com
+ * @author yinyong#sogou-inc.com
  * @date Fri Aug 23 2013 19:29:17 GMT+0800 (CST)
  * @version 0.0.1
  */
@@ -45,7 +45,7 @@ var protoType = {
 
     /**
      * Save&insert operation.
-     * @param  {[object]}   data     The Object will be inserted.
+     * @param  {Object}   data     The Object will be inserted.
      * @param  {Function} callback Error callback function.
      */
     save: function(data, callback) {
@@ -59,9 +59,9 @@ var protoType = {
 
     /**
      * Remove operation.
-     * @param  {[Object]}   selector [description]
-     * @param  {[Object]}   options  [description]
-     * @param  {Function} callback [description]
+     * @param  {Object}   selector 
+     * @param  {Object}   options  
+     * @param  {Function} callback 
      */
     remove: function(selector, options, callback) {
         return this._query(function(collection, clean) {
@@ -74,9 +74,9 @@ var protoType = {
 
     /**
      * Update operation.
-     * @param  {[type]}   selector [description]
-     * @param  {[type]}   options  [description]
-     * @param  {Function} callback [description]
+     * @param  {Object}   selector 
+     * @param  {Object}   options  
+     * @param  {Function} callback 
      */
     update: function(selector, options, callback) {
         return this._query(function(collection, clean) {
@@ -88,9 +88,9 @@ var protoType = {
     },
     /**
      * Find operation.
-     * @param  {[type]}   selector [description]
-     * @param  {[type]}   options  [description]
-     * @param  {Function} callback [description]
+     * @param  {Object}   selector 
+     * @param  {Object}   options  
+     * @param  {Function} callback 
      */
     find: function(selector, options, callback) {
         return this._query(function(collection, clean) {
@@ -102,9 +102,9 @@ var protoType = {
     },
     /**
      * Count operation.
-     * @param  {[type]}   selector [description]
-     * @param  {[type]}   options  [description]
-     * @param  {Function} callback [description]
+     * @param  {Object}   selector 
+     * @param  {Object}   options  
+     * @param  {Function} callback 
      */
     count: function(selector, options, callback) {
         return this._query(function(collection, clean) {
@@ -116,10 +116,10 @@ var protoType = {
     },
     /**
      * Distinct query operation.
-     * @param  {[type]}   key      The distinct one.
-     * @param  {[type]}   selector [description]
-     * @param  {[type]}   options  [description]
-     * @param  {Function} callback [description]
+     * @param  {String}   key      The distinct one.
+     * @param  {Object}   selector 
+     * @param  {Object}   options  
+     * @param  {Function} callback 
      */
     distinct: function(key, selector, options, callback) {
         return this._query(function(collection, clean) {
@@ -136,7 +136,7 @@ var protoType = {
  * If you wanna operate another collection,you should do this:
  *  <code>var yourCollec=new Model("yourCollection");</code>
  * 
- * @param {[string]} collectionName [description]
+ * @param {String} collectionName 
  */
 var Model = function(collectionName) {
     this._collections = collectionName;

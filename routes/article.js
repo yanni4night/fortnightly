@@ -2,12 +2,17 @@
  * Article controller.
  * Copyright(C) Sogou.com UFO
  *
+ * changelog
+ * 2013/11/03:sort articles by create time desc
+ * 
  * @author yinyong@sogou-inc.com
  * @date Fri Aug 23 2013 22:05:52 GMT+0800 (CST)
- * @version 0.0.1
+ * @version 0.0.2
  */
 
-var Model = require('../Model')
+var util=require('util');
+var config=require('../config');
+var Model = require('../Model');
 var ObjectId = require('mongodb').ObjectID;
 var markdown = require("markdown").markdown;
 var readability = require('node-readability');
@@ -15,15 +20,15 @@ var readability = require('node-readability');
 //article collection
 var Article = new Model('article');
 //define the max count article items a page shows.
-var PAGEITEMS = 10;
+var PAGEITEMS = config.articlePageNum;
 //define the max count of collection items a user can take.
-var MAXCOLLECTIONITEMS = 10;
+var MAXCOLLECTIONITEMS = config.maxCollectionNum;
 
 var ArticleModule = {
     /**
      * Show the page for creating a new article.
-     * @param {Request} req [description]
-     * @param {Response} res [description]
+     * @param {Request} req 
+     * @param {Response} res 
      */
     add: function(req, res) {
         return res.render('article-edit', {
@@ -33,15 +38,14 @@ var ArticleModule = {
     },
     /**
      * Save a new article[AJAX][POST].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     save: function(req, res) {
         var title = req.body.title;
         var content = req.body.content;
         var summary = req.body.summary;
-        var origin = req.body.origin;//todo:validate url
-
+        var origin = req.body.origin||""; //todo:validate url
 
         var tags = req.body.tags;
         if (!title || !content || !summary) {
@@ -52,31 +56,34 @@ var ArticleModule = {
         }
 
         //Lowercase
-        if (tags && tags.constructor == Array) {
+        if (util.isArray(tags)) {
             tags.forEach(function(tag, index) {
                 tags[index] = String(tag).toLowerCase();
             });
+        }else
+        {
+            tags=[];
         }
 
         return Article.save({
             title: title,
             content: content,
             summary: summary,
-            tags: tags || "",
-            origin:origin,
-            createTime:Date.now(),//nightyin:save creating time
+            tags: tags,
+            origin: origin,
+            createTime: Date.now(), //nightyin:save creating time
             editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
         }, function(err, msg) {
             return res.json({
                 result: err ? 0 : 1,
-                msg: err?String(err):"success"
+                msg: err ? String(err) : "success"
             })
         });
     },
     /**
      * Find an article and pust it in the editing page.
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     edit: function(req, res) {
         if (typeof req.params['id'] === 'undefined') {
@@ -84,7 +91,7 @@ var ArticleModule = {
                 errmsg: "No id specified!"
             });
         }
-
+        //validate id
         if (!/^[a-z0-9]{24}$/i.test(req.params['id'])) {
             return res.render('error', {
                 errmsg: "wrong id"
@@ -117,8 +124,8 @@ var ArticleModule = {
     },
     /**
      * Update an article.Need an _id parameter[AJAX][POST].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      * @todo Merge with add operation.
      */
     update: function(req, res) {
@@ -126,7 +133,7 @@ var ArticleModule = {
         var content = req.body.content;
         var summary = req.body.summary;
         var tags = req.body.tags;
-        var origin = req.body.origin;//todo:validate
+        var origin = req.body.origin||""; //todo:validate
         var _id = req.body._id;
         if (!_id || !title || !content || !summary) {
             return res.json({
@@ -143,23 +150,23 @@ var ArticleModule = {
         }
 
         //Lowercase
-        if (tags && tags.constructor == Array) {
+        if (util.isArray(tags)) {
             tags.forEach(function(tag, index) {
                 tags[index] = String(tag).toLowerCase();
             });
-        }
+        }else tags=[];
 
         return Article.update({
             _id: ObjectId(_id)
         } /*selector*/ , {
-            $set:
-            {title: title,
-            content: content,
-            summary: summary,
-            tags: tags,
-            origin:origin,
-            updateTime:Date.now(),//nightyin:save updating time
-            editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
+            $set: {
+                title: title,
+                content: content,
+                summary: summary,
+                tags: tags,
+                origin: origin,
+                updateTime: Date.now(), //nightyin:save updating time
+                editorType: /^(markdown|html)$/i.test(req.body.editorType) ? req.body.editorType : "HTML" //or markdown or html
             }
         } /*options*/ , function(err, result) {
             if (err) {
@@ -180,8 +187,8 @@ var ArticleModule = {
      * Show search result.Need a key and a page[GET].
      * This will search tags,title and summary.
      *
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     search: function(req, res) {
         var key = req.param('key');
@@ -205,8 +212,8 @@ var ArticleModule = {
                 title: reg
             }, {
                 tags: reg
-            },{
-                origin:reg
+            }, {
+                origin: reg
             }]
         }, {
             title: "Search for '" + key + "'",
@@ -217,8 +224,8 @@ var ArticleModule = {
     },
     /**
      * Collect article to session.Need article id[ALL].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     collect: function(req, res) {
         var _id = req.param("id");
@@ -232,7 +239,7 @@ var ArticleModule = {
         }
 
         //req.session.collection MUST be an array
-        if (typeof req.session.collection === 'undefined' || req.session.collection.constructor != Array)
+        if (!util.isArray(req.session.collection))
             req.session.collection = [];
 
         //We have a count restrict.
@@ -266,8 +273,8 @@ var ArticleModule = {
     },
     /**
      * Uncollect an article.Need a id[AJAX][POST].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     uncollect: function(req, res) {
         var _id = req.param("id");
@@ -280,7 +287,7 @@ var ArticleModule = {
         }
 
         //At least it does not exist.
-        if (!req.session.collection || Array != req.session.collection.constructor) {
+        if (!util.isArray(req.session.collection)){
             return res.json({
                 result: 1,
                 msg: "Not exist",
@@ -316,8 +323,8 @@ var ArticleModule = {
     },
     /**
      * Show collection.Need session.
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     collection: function(req, res) {
         if (!req.session.collection)
@@ -348,8 +355,8 @@ var ArticleModule = {
     },
     /**
      * Query by tag.Need a tag and a page[GET].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     tags: function(req, res) {
         var tag = req.param('tag');
@@ -375,10 +382,10 @@ var ArticleModule = {
     },
     /**
      * Common query and list.Private function.It outputs a tag cloud.
-     * @param  {Request} req           [description]
-     * @param  {Response} res           [description]
-     * @param  {Object} selector      [description]
-     * @param  {Object} renderOptions [description]
+     * @param  {Request} req           
+     * @param  {Response} res           
+     * @param  {Object} selector      
+     * @param  {Object} renderOptions 
      */
     _query: function(req, res, selector, renderOptions) {
 
@@ -417,7 +424,9 @@ var ArticleModule = {
                 return Article.find(selector /*selector*/ , {
                     skip: (page - 1) * itemsEachPage,
                     limit: itemsEachPage,
-                    sort:{createTime:1},
+                    sort: {
+                        createTime: 1
+                    },
                     fields: {
                         content: 0,
                         tags: 0
@@ -459,7 +468,7 @@ var ArticleModule = {
                                     if (typeof t == 'string' || t.constructor == String) {
                                         tagResultRender[t] = (undefined === tagResultRender[t]) ? 1 : tagResultRender[t] + 1;
                                         ++totalTags;
-                                    } else if (t.constructor == Array) {
+                                    } else if (util.isArray(t)) {
                                         t.forEach(function(item) {
                                             tagResultRender[item] = (undefined === tagResultRender[item]) ? 1 : tagResultRender[item] + 1;
                                         });
@@ -494,8 +503,8 @@ var ArticleModule = {
     },
     /**
      * List 10 articles at most.Need a page parameter[GET].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     list: function(req, res) {
         return ArticleModule._query(req, res, {}, {
@@ -507,14 +516,14 @@ var ArticleModule = {
     },
     /**
      * Show an article in HTML.Need an id parameter[GET].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     read: function(req, res) {
         if (typeof req.params['id'] === 'undefined')
             return res.render("error", {
                 errmsg: "No ID found!"
-            }); 
+            });
 
         if (!/^[a-z0-9]{24}$/.test(req.params['id'])) {
             return res.render('error', {
@@ -546,8 +555,8 @@ var ArticleModule = {
     }, //read
     /**
      * [addgrab description]
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     addGrab: function(req, res) {
         var url = req.query.url || "";
@@ -559,8 +568,8 @@ var ArticleModule = {
     },
     /**
      * [grabUrl description]
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req 
+     * @param  {Response} res 
      */
     grabUrl: function(req, res) {
         var title = req.body.title;
@@ -575,40 +584,40 @@ var ArticleModule = {
         }
 
         //Lowercase
-        if (tags && tags.constructor == Array) {
+        if (util.isArray(tags)){
             tags.forEach(function(tag, index) {
                 tags[index] = String(tag).toLowerCase();
             });
         }
 
         return readability.read(url, function(err, article) {
-            if(err){
+            if (err) {
                 return res.json({
-                    result:0,
-                    msg:String(err)
+                    result: 0,
+                    msg: String(err)
                 });
             }
 
-            var content=article.getContent();
+            var content = article.getContent();
             //nightyin:stupid way
-            var summary=(content||"Nothing").replace(/<\/?\w+\s?[\s\S]*?>/img,'');
-            
+            var summary = (content || "Nothing").replace(/<\/?\w+\s?[\s\S]*?>/img, '');
+
             return Article.save({
                 title: title,
                 content: content,
                 summary: summary,
                 tags: tags || "",
-                createTime:Date.now(),//nightyin:save creating time
-                origin:url,//2013/11/1-save origin url
+                createTime: Date.now(), //nightyin:save creating time
+                origin: url, //2013/11/1-save origin url
                 editorType: "HTML"
             }, function(err, ret) {
                 return res.json({
                     result: err ? 0 : 1,
-                    msg: err?String(err):"success",
-                    url:"/article/read/"+ret[0]._id
+                    msg: err ? String(err) : "success",
+                    url: "/article/read/" + ret[0]._id
                 })
             });
-        });//read
+        }); //read
     }
 };
 

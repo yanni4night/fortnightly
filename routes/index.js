@@ -30,8 +30,8 @@ var index = {
     },
     /**
      * Test suit
-     * @param  {[type]} req [description]
-     * @param  {[type]} res [description]
+     * @param  {[type]} req 
+     * @param  {[type]} res 
      */
     test: function(req, res) {
 

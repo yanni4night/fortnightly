@@ -3,15 +3,19 @@
  * Template+Articles=Page(Email)
  * Copyright(C) Sogou.com UFO
  *
- * @Author:yinyong@sogou-inc.com
+ * changelog
+ * 2013/11/03:sort tempalte by create/update time.
+ * 
+ * @Author:yinyong#sogou-inc.com
  * @Date:Sun Aug 25 2013 15:13:42 GMT+0800 (CST)
- * @Version:0.0.1
+ * @Version:0.0.2
  */
 
+var util = require('util');
 var Model = require('../Model');
 var Ursa = require('../ursa').Ursa;
-var Config=require('../config');
-var Email   = require("emailjs");
+var Config = require('../config');
+var Email = require("emailjs");
 var ObjectId = require('mongodb').ObjectID;
 
 //template collection
@@ -19,10 +23,15 @@ var Template = new Model('template');
 var Article = new Model('article');
 
 var TemplateModule = {
+    /**
+     * Display a page for adding a template.
+     * @param {Request} req
+     * @param {Response} res
+     */
     add: function(req, res) {
         return res.render("template-add", {
             title: "Add template",
-            template:"{}",
+            template: "{}",
             hasCollection: req.session.collection ? req.session.collection.length : 0
         });
     },
@@ -32,14 +41,19 @@ var TemplateModule = {
      * @param  {[type]} res [description]
      */
     list: function(req, res) {
-        return Template.find({}, {}, function(err, result) {
+        return Template.find({}, {
+            sort:{
+                updateTime:1,
+                createTime:1
+            }
+        }, function(err, result) {
             if (err) {
                 return res.render("error", {
-                    errMsg: "Query template(s) failed!"
+                    errMsg: "Query template(s) failed:" + err
                 });
             } else {
                 return res.render("template-list", {
-                    data: result,
+                    data: result.reverse(),
                     title: "Template(s) List",
                     alertMsg: "All the template(s):",
                     hasCollection: req.session.collection ? req.session.collection.length : 0
@@ -48,9 +62,9 @@ var TemplateModule = {
         });
     }, //list
     /**
-     * Save a new template through AJAX.Need content[POST] or update if _id exist.
-     * @param  {[Request]} req [description]
-     * @param  {[Response]} res [description]
+     * Save or update a template through AJAX depends on if '_id' exists.
+     * @param  {Request} req
+     * @param  {Response} res
      */
     save: function(req, res) {
         var content = req.body.content;
@@ -72,13 +86,16 @@ var TemplateModule = {
             return Template.update({
                 _id: ObjectId(tid)
             }, {
-                content: content,
-                name: name
+                $set: {
+                    content: content,
+                    name: name,
+                    updateTime: Date.now()
+                }
             }, function(err, result) {
                 if (err) {
                     return res.json({
                         result: 0,
-                        msg: "Unknown error(s),save failed"
+                        msg: "save failed:" + err
                     });
                 } else {
                     return res.json({
@@ -92,12 +109,13 @@ var TemplateModule = {
         {
             return Template.save({
                 content: content,
-                name: name
+                name: name,
+                createTime: Date.now() //2013-11-03
             }, function(err, result) {
                 if (err) {
                     return res.json({
                         result: 0,
-                        msg: "Unknown error(s),save failed"
+                        msg: "save failed" + err
                     });
                 } else {
                     return res.json({
@@ -110,8 +128,8 @@ var TemplateModule = {
     }, //save
     /**
      * Remove a template.Need a template id[ALL][AJAX].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req
+     * @param  {Response} res
      */
     remove: function(req, res) {
         var tid = req.param('tid');
@@ -133,15 +151,15 @@ var TemplateModule = {
             } else {
                 return res.json({
                     result: 0,
-                    msg: "Remove failed"
+                    msg: "Remove failed:" + err
                 });
             }
         });
     },
     /**
-     * [modify description]
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * Ouput a template for modifying.Need a template id[ALL].
+     * @param  {Request} req
+     * @param  {Response} res
      */
     edit: function(req, res) {
         var tid = req.param("tid");
@@ -154,13 +172,12 @@ var TemplateModule = {
         return Template.find({
             _id: ObjectId(tid)
         }, {}, function(err, result) {
-            if (err || !result) {
+            if (err || !util.isArray(result) || !result.length) {
                 return res.render("error", {
                     errmsg: "Cannot find tempalte " + tid
                 });
             } else {
                 var tem = result[0];
-                console.log(tem);
                 return res.render("template-add", {
                     template: JSON.stringify(tem),
                     title: "Edit template",
@@ -174,19 +191,20 @@ var TemplateModule = {
 
     /**
      * Render template with articles.Inner function.
-     * @param  {Request}   req      [description]
-     * @param  {Response}   res      [description]
-     * @param  {Function} callback [description]
+     * @param  {Request}   req     
+     * @param  {Response}   res     
+     * @param  {Function} callback
      */
-    _render:function(req,res,callback){
-      var templateId = req.param('tid');
+    _render: function(req, res, callback) {
+        var templateId = req.param('tid');
+
         if (!/^[a-z0-9]{24}$/i.test(templateId)) {
             return res.render("error", {
-                errmsg: "Lack of template"
+                errmsg: "Illegal template id"
             });
         }
         //Check collection in session.collection
-        if (typeof req.session.collection === 'undefined' || req.session.collection.constructor != Array || !req.session.collection.length) {
+        if (!util.isArray(req.session.collection) || !req.session.collection.length) {
             return res.render("error", {
                 errmsg: "You have no any collection,<a href='/article/list'>Collect one</a>",
                 escape: function(m) {
@@ -203,13 +221,13 @@ var TemplateModule = {
 
         return Article.find({
             _id: {
-                $in: inQ//use $in
+                $in: inQ
             }
         }, {
-           // limit: 10
+            // limit: 10
         }, function(err, articles) {
             delete inQ;
-            if (err||!articles.length) {
+            if (err || !articles.length) {
                 //This should only happen when an article DB item is removed just after a user collect it.
                 return res.render('error', {
                     errmsg: "Cannot find articles to render!"
@@ -218,7 +236,7 @@ var TemplateModule = {
                 return Template.find({
                     _id: ObjectId(templateId)
                 }, {}, function(err, result) {
-                    if (err || !result.length) {
+                    if (err || !util.isArray(result) || !result.length) {
                         //This should happen when a template DB item is removed
                         return res.render('error', {
                             errmsg: "Cannot find template to render!"
@@ -227,17 +245,22 @@ var TemplateModule = {
                         var tem = result[0]; //result should be an array whoes length is 0
 
                         //Set link to each article object
-                        articles.forEach(function(article,index){
-                            articles[index].link=Config.serverURL+"/article/read/"+article._id;
+                        articles.forEach(function(article, index) {
+                            articles[index].link = Config.serverURL + "/article/read/" + article._id;
                         });
 
                         try {
-                            var content=Ursa.render(""+tem._id, {
+                            //fixme:replace Ursa
+                            var content = Ursa.render("" + tem._id, {
                                 articles: articles
                             }, tem.content);
 
-                            return callback&&callback({articles:articles,template:tem,content:content});
-                            
+                            return callback && callback({
+                                articles: articles,
+                                template: tem,
+                                content: content
+                            });
+
                         } catch (e) {
                             return res.render('error', {
                                 errmsg: "Error(s) occured when rendering template with article(s):" + e
@@ -250,19 +273,15 @@ var TemplateModule = {
     },
     /**
      * Mail.Need a mailto[ALL].
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req
+     * @param  {Response} res
      */
     mail: function(req, res) {
 
-        var myEmail=Config.email;
-        var smtp=Config.smtp;
-        var pwd=Config.emailPwd;
-        var mailto=req.param('mailto');
-        //Simple validate
-        if(!/^\w[\w\.]*\w@\w[\w_\-\.]*\w$/.test(mailto)){
-            return res.render("error",{errmsg:"Not a legal email address!"});
-        }
+        var myEmail = Config.email;
+        var smtp = Config.smtp;
+        var pwd = Config.emailPwd;
+        var mailto = req.param('mailto');
 
         return TemplateModule._render(req, res, function(obj) {
 
@@ -285,29 +304,28 @@ var TemplateModule = {
                 }, function(err, message) {
                     if (err) {
                         return res.render("error", {
-                            errmsg: err|"send failed"
+                            errmsg: err | "send failed"
                         });
-                    }else
-                    {   
+                    } else {
                         //Destroy collection if succeed.
                         delete req.session.collection;
-                        return res.render("success",{succmsg:"Email sent successfully!"});
+                        return res.render("success", {
+                            succmsg: "Email sent successfully!"
+                        });
                     }
                 });
             } catch (e) {
                 return res.render("error", {
-                            errmsg: "Unknown error(s) while mailling"
-                        });
+                    errmsg: "Unknown error(s) while mailling"
+                });
             }
 
-
-          
         });
     }, //mail
     /**
      * Use template to create a page with articles.
-     * @param  {Request} req [description]
-     * @param  {Response} res [description]
+     * @param  {Request} req
+     * @param  {Response} res
      */
     use: function(req, res) {
         return TemplateModule._render(req, res, function(obj) {
@@ -316,7 +334,7 @@ var TemplateModule = {
                     return m
                 },
                 content: obj.content,
-                templateId:obj.template._id
+                templateId: obj.template._id
             });
         });
     } //use
