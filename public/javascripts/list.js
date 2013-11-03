@@ -2,7 +2,7 @@
  * list.js
  * Copyright(C) Sogou.com UFO
  *
- * @Author:yinyong@sogou-inc.com
+ * @Author:yinyong#sogou-inc.com
  * @Date:Sun Aug 25 2013 11:45:07 GMT+0800 (CST)
  * @Version:0.0.1
  */
@@ -39,7 +39,7 @@ function() {
     $('#tagcloud').tagoSphere(settings);
 
     var paginationUl=$(".pagination");
-    paginationUl.pagination({
+    (paginationUl.length)&&paginationUl.pagination({
         currentPage:+paginationUl.data("currentpage"),
         pages:+paginationUl.data("totalpages"),
         cssStyle:"compact-theme",
@@ -50,12 +50,12 @@ function() {
 
     //For remove article from my collection
     $(".rm").click(function(e) {
-        var aid = $(this).data("aid");
+        var aid = $(this).attr("data-aid");
         if (!/^[a-z0-9]{24}$/i.test(aid)) {
             return bootbox.alert("ID not valid!");
         }
 
-        (typeof bootbox != 'undefined') && bootbox.confirm("Are u sure?", function(result) {
+        (typeof bootbox !== 'undefined') && bootbox.confirm("R u sure to uncollect?", function(result) {
             if(!result)return;
             
             $.ajax({
@@ -73,7 +73,7 @@ function() {
                             $("#alertmsg").removeClass('alert-success').addClass('alert-warning').html('No article(s) collected,you could <a href="/article/list">collect one or more</a>');
                         }
                     } else {
-                        bootbox.alert(data.msg);
+                        bootbox.alert(data.msg||"failed");
                     }
                 },
                 error: function(xhr, error) {
