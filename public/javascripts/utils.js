@@ -4,7 +4,14 @@ if(String.prototype.trim===undefined)
 }
 
 window.Utils={
-        loadScript: function(src, callback) {
+    /**
+     * [loadScript description]
+     * @param  {[type]}   src      [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     * @deprecated use jQuery.getScript
+     */
+/*        loadScript: function(src, callback) {
             var domScript = document.createElement('script');
             domScript.src = src;
             callback = callback || function() {};
@@ -16,6 +23,6 @@ window.Utils={
                 }
             }
             document.head.appendChild(domScript);
-        }
+        }*/
 
 };

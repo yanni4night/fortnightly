@@ -1,7 +1,7 @@
 /**
  * UFO Fortnightly ,modify an article
  * @Copyright(C) Sogou.com UFO
- * @Author:yinyong@sogou-inc.com
+ * @Author:yinyong#sogou-inc.com
  * @Date:Fri Aug 24 2013 09:56:22 GMT+0800 (CST)
  * @version:0.0.1
  */
@@ -26,15 +26,18 @@ function() {
             $('#tagit').tagit();
 
             if (/^html$/i.test(article.editorType)) {
-                Utils.loadScript('/javascripts/kindeditor-min.js', function() {
+                $.getScript('/javascripts/kindeditor-min.js', function() {
                     KindEditor.ready(function(K) {
-                        window.editor = K.create('#editor_id');
+                        window.editor = K.create('#editor_id',{
+                            themesPath:"/javascripts/themes/",
+                            langPath:"/javascripts/lang/"
+                        });
                     });
                 });
             } else {
                 $("#editor-wrapper").append('<div id="epiceditor"></div>');
                 $('#editor_id').hide();
-                Utils.loadScript('/javascripts/epiceditor.min.js', function() {
+                $.getScript('/javascripts/epiceditor.min.js', function() {
                     window.editor = new EpicEditor({
                         textarea: "editor_id",
                         basePath: '/',

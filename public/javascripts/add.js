@@ -1,7 +1,7 @@
 /**
  * UFO Fortnightly ,add an article
  * @Copyright(C) Sogou.com UFO
- * @Author:yinyong@sogou-inc.com
+ * @Author:yinyong#sogou-inc.com
  * @Date:Fri Aug 23 2013 19:29:17 GMT+0800 (CST)
  * @version:0.0.1
  */
@@ -20,7 +20,7 @@ function() {
                 $("#editor-wrapper").append('<div id="epiceditor"></div>');
                 $('#switchEditor').text('Switch to  HTML editor').attr('href', '/article/add');
 
-                Utils.loadScript('/javascripts/epiceditor.min.js', function() {
+                $.getScript('/javascripts/epiceditor.min.js', function() {
                     window.editor = new EpicEditor({
                         basePath: '/',
                         theme: {
@@ -40,9 +40,12 @@ function() {
                 $("#editor-wrapper").append('<textarea class="form-control" rows="20" id="editor_id"></textarea>');
                 $('#switchEditor').text('Switch to Markdown editor').attr('href', '/article/add?e=markdown');
 
-                Utils.loadScript('/javascripts/kindeditor-min.js', function() {
+                $.getScript('/javascripts/kindeditor-min.js', function() {
                     KindEditor.ready(function(K) {
-                        window.editor = K.create('#editor_id');
+                        window.editor = K.create('#editor_id',{
+                            themesPath:"/javascripts/themes/",
+                            langPath:"/javascripts/lang/"
+                        });
                     });
                 });
             }
