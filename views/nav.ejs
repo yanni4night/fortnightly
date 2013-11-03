@@ -12,21 +12,23 @@
 
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li <%if(typeof pageType!="undefined" && pageType==='add'){%>
+                    <li <%if(typeof pageType!=="undefined" && pageType==='add'){%>
                         class="active"<%}%>>
                         <a href="/article/add">Add</a>
                     </li>
 
-                    <li <%if(typeof pageType!="undefined" && pageType==='all'){%>
+                    <li <%if(typeof pageType!=="undefined" && pageType==='all'){%>
                         class="active"<%}%>>
                         <a href="/article/list">Articles</a>
                     </li>
 
-                    <li <%if(typeof pageType!="undefined" && pageType==='collection'){%>
+                    <li <%if(typeof pageType!=="undefined" && pageType==='collection'){%>
                         class="active"<%}%>>
                         <a id="menu-collection" href="/article/collection">
                             Collections(<%if((typeof hasCollection!="undefined") && hasCollection){%><%=hasCollection%><%}else{%>0<%}%>)</a>
                     </li>
+                    <li <%if(typeof pageType!=="undefined" && pageType==='past'){%>
+                        class="active"<%}%>><a href="/past/list">Published</a></li>
                 </ul>
                 <form class="navbar-form navbar-left" role="search" action='/article/search'>
                     <div class="form-group">
@@ -35,7 +37,7 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <!--read page-->
-                    <%if('undefined'!=typeof pageType && 'read'===pageType){%>
+                    <%if('undefined'!==typeof pageType && 'read'===pageType){%>
                      <li>
                          <button type="button" class="btn btn-default navbar-btn collect" data-collect="0" data-aid="<%=data['_id']%>">Collect</button>
                      </li>
