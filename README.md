@@ -5,6 +5,7 @@ A system for collecting articles and publishing fortnightly
 
 changelog
 ===========
+ - 2013-11-03:replace Ursa with [ejs](https://github.com/visionmedia/ejs).
  - 2013-11-01:save origin url support.
  - 2013-10-06:migrate to github;support URL grabbing.
 
