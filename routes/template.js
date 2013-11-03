@@ -4,7 +4,7 @@
  * Copyright(C) Sogou.com UFO
  *
  * changelog
- * 2013/11/03:sort tempalte by create/update time.
+ * 2013/11/03:sort tempalte by create/update time;repalced Ursa  with ejs.
  * 
  * @Author:yinyong#sogou-inc.com
  * @Date:Sun Aug 25 2013 15:13:42 GMT+0800 (CST)
@@ -13,9 +13,9 @@
 
 var util = require('util');
 var Model = require('../Model');
-var Ursa = require('../ursa').Ursa;
 var Config = require('../config');
 var Email = require("emailjs");
+var ejs = require("ejs");
 var ObjectId = require('mongodb').ObjectID;
 
 //template collection
@@ -250,11 +250,7 @@ var TemplateModule = {
                         });
 
                         try {
-                            //fixme:replace Ursa
-                            var content = Ursa.render("" + tem._id, {
-                                articles: articles
-                            }, tem.content);
-
+                            var content=ejs.render(tem.content,{cache:false,articles:articles});
                             return callback && callback({
                                 articles: articles,
                                 template: tem,
