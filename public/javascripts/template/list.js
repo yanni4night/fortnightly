@@ -2,7 +2,7 @@
  * list.js
  * Copyright(C) Sogou.com UFO
  *
- * @Author:yinyong@sogou-inc.com
+ * @Author:yinyong#sogou-inc.com
  * @Date:Tue Aug 27 2013 19:49:37 GMT+0800 (CST)
  * @Version:0.0.1
  */
@@ -12,12 +12,12 @@ function() {
     var APP = {
         init: function() {
             $(".rm").click(function(e) {
-                var tid = $(this).data("tid");
+                var tid = $(this).attr("data-tid");
                 if (!/^[a-z0-9]{24}$/i.test(tid)) {
                     return bootbox.alert("ID not valid!");
                 }
 
-                bootbox.confirm("", function(result) {
+                bootbox.confirm("R U sure to delete this template(cannot undo)?", function(result) {
                     if (!result) return;
                     $.ajax({
                         url: "/template/remove",
@@ -38,9 +38,6 @@ function() {
                         }
                     }); //ajax
                 });
-
-
-
             });
         }
     };
