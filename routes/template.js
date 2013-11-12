@@ -22,6 +22,11 @@ var ObjectId = require('mongodb').ObjectID;
 var Template = new Model('template');
 var Article = new Model('article');
 
+ejs.filters.dateFormat=function(unix_time_stamp){
+    var d=new Date(unix_time_stamp);
+    return d.getFullYear()+"-"+(1+d.getMonth())+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+};
+
 var TemplateModule = {
     /**
      * Display a page for adding a template.

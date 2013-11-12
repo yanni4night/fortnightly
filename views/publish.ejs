@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <title>Publish</title>
+  <%include res%></head>
+<body>
+  <div class="container publish">
+    <!--NAV-->
+    <%include nav.ejs %>
+    <div class="ctrl-panel"> 
+    <!--Article POOL-->
+    <select multiple class="article">
+      <%articles.forEach(function(a,i){
+        %>
+      <option value="<%=a._id%>"><%=a.title%>&nbsp;&nbsp;&nbsp;<span class="date">[<%=:a.createTime|dateFormat%>]</span></option>
+      <%
+      });%></select>
+      <div class="ctrl">
+        <button class="arr">&lt;=</button>
+        <button class="arr">=&gt;</button>
+      </div>
+      <!--Article SELECTED-->
+    <select multiple class="article">
+      <%collection.forEach(function(a,i){
+        %>
+      <option value="<%=a._id%>">
+        <%=a.title%></option>
+      <%
+      });%></select>
+      <!--ALL TEMPLATES-->
+       <select class="tpl'">
+      <%tpls.forEach(function(a,i){
+        %>
+      <option value="<%=a._id%>">
+        <%=a.name%></option>
+      <%
+      });%></select>
+    </div>
+    <%include foot%></div>
+</body>
+  <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+  <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascripts/utils.js?t=201308241007"></script>
+  <script type="text/javascript" src="/javascripts/publish.js?t=201311122126"></script>
+</html>

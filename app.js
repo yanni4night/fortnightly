@@ -7,6 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var article = require('./routes/article');
 var template = require('./routes/template');
+var publish = require('./routes/publish');
 var http = require('http');
 var path = require('path');
 var MongoStore = require('connect-mongo');
@@ -67,6 +68,7 @@ app.get('/template/list',template.list);
 app.get('/template/use/:tid',template.use);
 app.post('/template/save',template.save);
 app.get('/template',function(req,res){res.redirect('/template/list/');});
+app.get('/publish',publish.publish);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

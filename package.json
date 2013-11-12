@@ -17,6 +17,7 @@
     "markdown": "*",
     "connect-mongo": "*",
     "emailjs": "*",
-    "node-readability": "*"
+    "node-readability": "*",
+    "async":"*"
   }
 }
