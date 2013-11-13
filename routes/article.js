@@ -276,6 +276,7 @@ var ArticleModule = {
         var id = req.param("id");
 
         var ids=id.split('|');
+        var removed_ids=[];
 
          if (!util.isArray(req.session.collection)){
             req.session.collection=[];
@@ -287,9 +288,10 @@ var ArticleModule = {
                 return;
             }
 
-            req.session.collection.every(function(it,index){
+            req.session.collection.forEach(function(it,index){
                 if(it==_id)
                 {
+                    removed_ids.push(_id);
                     req.session.collection.splice(index,1);
                 }
             });
@@ -299,6 +301,7 @@ var ArticleModule = {
         return res.json({
             result:1,
             msg:"Removed succeed",
+            ids:removed_ids.join('|'),
             count:req.session.collection.length
         });
     },

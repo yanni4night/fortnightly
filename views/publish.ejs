@@ -13,34 +13,39 @@
     <select multiple class="article">
       <%articles.forEach(function(a,i){
         %>
-      <option value="<%=a._id%>"><%=a.title%>&nbsp;&nbsp;&nbsp;<span class="date">[<%=:a.createTime|dateFormat%>]</span></option>
+      <option value="<%=a._id%>"><%=a.title%>&nbsp;&nbsp;&nbsp;[<%=:a.createTime|dateFormat%>]</option>
       <%
       });%></select>
       <div class="ctrl">
-        <button class="arr">&lt;=</button>
         <button class="arr">=&gt;</button>
+        <button class="arr">&lt;=</button>
       </div>
       <!--Article SELECTED-->
     <select multiple class="article">
       <%collection.forEach(function(a,i){
         %>
-      <option value="<%=a._id%>">
-        <%=a.title%></option>
+      <option value="<%=a._id%>"><%=a.title%></option>
       <%
       });%></select>
       <!--ALL TEMPLATES-->
-       <select class="tpl'">
+       <select class="tpls">
       <%tpls.forEach(function(a,i){
         %>
       <option value="<%=a._id%>">
         <%=a.name%></option>
       <%
       });%></select>
+      <div class="ctrl">
+        <button class="render">Render</button>
+        <button class="email">Email</button>
+      </div>
     </div>
+    <iframe class="preview" src="javascript:;"></iframe>
     <%include foot%></div>
 </body>
   <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
   <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="/javascripts/bootbox.min.js"></script>
   <script type="text/javascript" src="/javascripts/utils.js?t=201308241007"></script>
   <script type="text/javascript" src="/javascripts/publish.js?t=201311122126"></script>
 </html>
