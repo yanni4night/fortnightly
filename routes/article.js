@@ -228,47 +228,42 @@ var ArticleModule = {
      * @param  {Response} res 
      */
     collect: function(req, res) {
-        var _id = req.param("id");
+        var id = req.param("id");
         var duplicated = false;
-
-        if (!/^[a-z0-9]{24}$/i.test(_id)) {
-            return res.json({
-                result: 0,
-                msg: "wrong id"
-            });
-        }
+        var added_id=[];
 
         //req.session.collection MUST be an array
-        if (!util.isArray(req.session.collection))
+        if (!util.isArray(req.session.collection)) {
             req.session.collection = [];
-
-        //We have a count restrict.
-        if (req.session.collection.length >= MAXCOLLECTIONITEMS) {
-            return res.json({
-                result: 0,
-                msg: "Too many,max " + MAXCOLLECTIONITEMS
-            });
         }
 
-        //Check duplicate
-        for (var i = 0; i < req.session.collection.length; ++i) {
-            if (_id == req.session.collection[i]) {
-                duplicated = true;
-                break;
+        var ids=id.split('|');//2013/11/13 10:28:50 support multiple ids
+        ids.forEach(function(_id,i){
+            if(!/^[a-z0-9]{24}$/i.test(_id)){
+                ids.splice(i,1);//remove illegal id
             }
-        }
+            //Ignore duplicated
+            if(req.session.collection.some(function(it,index){return it==_id})){
+                return;
+            }
 
-        //set to session
-        if (!duplicated)
+            if(req.session.length>=MAXCOLLECTIONITEMS)
+            {
+                return;
+            }
+
             req.session.collection.push(_id);
+            added_id.push(_id);
+        });
 
         //Really save to session
         req.session.save();
 
         return res.json({
-            result: 1,
+            result: added_id.length?1:0,
             count: req.session.collection.length,
-            msg: "Collect succeed"
+            ids:added_id.join('|'),
+            msg: added_id.length?"Collect succeed":"Cannot collect any"
         });
     },
     /**

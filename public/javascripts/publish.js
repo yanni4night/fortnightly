@@ -25,7 +25,7 @@ function() {
             $(".ctrl-panel .ctrl button:eq(1)").click(function(e) {
 
                 var items=self.allArticlesPool.find("option:selected");
-                self.allArticlesPool.remove(items);
+                items.remove();
                 self.collectArticlesPool.append(items);
 
             });
