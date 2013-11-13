@@ -240,7 +240,8 @@ var ArticleModule = {
         var ids=id.split('|');//2013/11/13 10:28:50 support multiple ids
         ids.forEach(function(_id,i){
             if(!/^[a-z0-9]{24}$/i.test(_id)){
-                ids.splice(i,1);//remove illegal id
+                //ids.splice(i,1);//remove illegal id
+                return;
             }
             //Ignore duplicated
             if(req.session.collection.some(function(it,index){return it==_id})){
@@ -272,49 +273,34 @@ var ArticleModule = {
      * @param  {Response} res 
      */
     uncollect: function(req, res) {
-        var _id = req.param("id");
+        var id = req.param("id");
 
-        if (!/^[a-z0-9]{24}$/i.test(_id)) {
-            return res.json({
-                result: 0,
-                msg: "wrong id"
-            });
-        }
+        var ids=id.split('|');
 
-        //At least it does not exist.
-        if (!util.isArray(req.session.collection)){
-            return res.json({
-                result: 1,
-                msg: "Not exist",
-                count: 0
-            });
-        }
+         if (!util.isArray(req.session.collection)){
+            req.session.collection=[];
+         }
 
-        var pos = -1;
-        //Find the position
-        req.session.collection.forEach(function(item, index) {
-            if (item == _id) {
-                pos = index;
+        ids.forEach(function(_id,i){
+            //Check illegal
+            if (!/^[a-z0-9]{24}$/i.test(_id)){
+                return;
             }
+
+            req.session.collection.every(function(it,index){
+                if(it==_id)
+                {
+                    req.session.collection.splice(index,1);
+                }
+            });
+
         });
 
-        //Whatever we think it succeed
-        if (pos > -1) {
-            req.session.collection.splice(pos, 1);
-
-            return res.json({
-                result: 1,
-                msg: "Already removed",
-                count: req.session.collection.length
-            });
-        } else {
-            return res.json({
-                result: 1,
-                msg: "Not found",
-                count: req.session.collection.length
-            });
-        }
-
+        return res.json({
+            result:1,
+            msg:"Removed succeed",
+            count:req.session.collection.length
+        });
     },
     /**
      * Show collection.Need session.

@@ -39,7 +39,7 @@
                                 <p class="list-group-item-text">
                                     <a href="/template/use/<%=data[g]['_id']%>
                                         " target='_blank'>
-                                        <%=data[g]['summary']%></a>
+                                        <%=: data[g]['summary'] | truncate_words:100%></a>
                                 </p>
                             </div>
                 <%}%></div>
