@@ -28,16 +28,26 @@
       <%
       });%></select>
       <!--ALL TEMPLATES-->
-       <select class="tpls">
-      <%tpls.forEach(function(a,i){
-        %>
-      <option value="<%=a._id%>">
-        <%=a.name%></option>
-      <%
-      });%></select>
-      <div class="ctrl">
-        <button class="render">Render</button>
-        <button class="email">Email</button>
+      <div class="ctrl-form">
+        <form action="/template/mail" method="get" accept-charset='utf-8'>
+          <div>
+            <label for="tid">Template</label>
+            <select class="tpls" name="tid">
+              <%tpls.forEach(function(a,i){%>          
+              <option value="<%=a._id%>">
+                <%=a.name%></option>
+              <%});%></select>
+          </div>
+          <div>
+            <label for="mailto">Email Add</label>
+            <input type="email" name="mailto" id="mailto" required/>          
+          </div>
+          <input type="hidden" name="token" value="<%=token%>"/>
+          <div>
+            <button class="email" type='submit'>Email</button>
+            <button class="render" type="button">Render</button>
+          </div>
+        </form>
       </div>
     </div>
     <iframe class="preview" src="javascript:;"></iframe>

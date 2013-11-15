@@ -14,8 +14,12 @@ function() {
          * @return {[type]} [description]
          */
         init: function() {
-            this.collectArticlesPool = $(".ctrl-panel select:eq(1)");
-            this.allArticlesPool = $(".ctrl-panel select:eq(0)");
+            this.$collectArticlesPool = $(".ctrl-panel select:eq(1)");
+            this.$allArticlesPool = $(".ctrl-panel select:eq(0)");
+            this.$collectBtn=$(".ctrl-panel .ctrl button:eq(0)");
+            this.$uncollectBtn=$(".ctrl-panel .ctrl button:eq(1)");
+            this.$renderBtn=$("button.render");
+            this.$previewIframe=$("iframe.preview");
             this.initEvent();
         },
         /**
@@ -24,9 +28,9 @@ function() {
          */
         initEvent: function() {
             var self = this;
-            $(".ctrl-panel .ctrl button:eq(0)").click(function(e) {
+            self.$collectBtn.click(function(e) {
 
-                var $items = self.allArticlesPool.find("option:selected");
+                var $items = self.$allArticlesPool.find("option:selected");
                 var ids = [];
                 $.each($items, function(index, item) {
                     ids.push($(item).val());
@@ -35,9 +39,9 @@ function() {
                 self.collectArticle(ids);
 
             });
-            $(".ctrl-panel .ctrl button:eq(1)").click(function(e) {
+            self.$uncollectBtn.click(function(e) {
 
-                var $items = self.collectArticlesPool.find("option:selected");
+                var $items = self.$collectArticlesPool.find("option:selected");
                 var ids = [];
                 $.each($items, function(index, item) {
                     ids.push($(item).val());
@@ -46,14 +50,9 @@ function() {
                 self.uncollectArticle(ids);
             });
 
-            $("button.render").click(function(e){
-                if(self.collectArticlesPool.find("option:selected").length)
-                $("iframe.preview").attr('src',"/template/use/"+$('select.tpls').val()+"?="+Date.now());
-            });
-
-            $("button.email").click(function(e){
-                if(self.collectArticlesPool.find("option:selected").length)
-                    ;//nightyin[2013-11-13 21:47:59]:TODO send email
+            self.$renderBtn.click(function(e){
+                if(self.$collectArticlesPool.find("option:selected").length)
+                self.$previewIframe.attr('src',"/template/use/"+$('select.tpls').val()+"?="+Date.now());
             });
 
         },
@@ -69,9 +68,9 @@ function() {
                 success: function(data) {
                     var ids = (data.ids || "").split('|');
                     ids.forEach(function(item, index) {
-                        var i = self.allArticlesPool.find('[value=' + item + ']');
+                        var i = self.$allArticlesPool.find('[value=' + item + ']');
                         i.remove();
-                        self.collectArticlesPool.append(i);
+                        self.$collectArticlesPool.append(i);
                     });
                 }
             });
@@ -117,9 +116,9 @@ function() {
                 success: function(data) {
                     var ids = (data.ids || "").split('|');
                     ids.forEach(function(item, index) {
-                        var i = self.collectArticlesPool.find('[value=' + item + ']');
+                        var i = self.$collectArticlesPool.find('[value=' + item + ']');
                         i.remove();
-                        self.allArticlesPool.append(i);
+                        self.$allArticlesPool.append(i);
                     });
                 }
             });

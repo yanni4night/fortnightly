@@ -12,6 +12,7 @@
  */
 
 var util = require('util');
+var uuid = require('uuid');
 var config = require('../config');
 var Model = require('../Model');
 var async = require('async');
@@ -100,10 +101,12 @@ module.exports = {
                     errmsg: err
                 });
             } else {
+                var _token=req.session.emailToken=uuid.v1();
                 return res.render('publish', {
                     tpls: tpls,
                     articles: articles,
                     collection: collection,
+                    token:_token,
                     pageType: 'publish'
                 });
             }

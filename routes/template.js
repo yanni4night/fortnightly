@@ -284,6 +284,11 @@ var TemplateModule = {
         var pwd = Config.emailPwd;
         var mailto = req.param('mailto');
 
+        var token=req.param('token');
+        if(token!=req.session.emailToken){
+            return res.render('error',{errmsg:"TOKEN not valid,refresh to retry"});
+        }
+
         return TemplateModule._render(req, res, function(obj) {
 
             try {

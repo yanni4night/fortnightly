@@ -18,6 +18,7 @@
     "connect-mongo": "*",
     "emailjs": "*",
     "node-readability": "*",
-    "async":"*"
+    "async":"*",
+    "uuid":"*"
   }
 }
