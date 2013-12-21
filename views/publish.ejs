@@ -13,7 +13,7 @@
     <select multiple class="article">
       <%articles.forEach(function(a,i){
         %>
-      <option value="<%=a._id%>"><%=a.title%>&nbsp;&nbsp;&nbsp;[<%=:a.createTime|dateFormat%>]</option>
+      <option value="<%=a._id%>"><%=a.title%>&nbsp;&nbsp;&nbsp;<%=:a.createTime|dateFormat%></option>
       <%
       });%></select>
       <div class="ctrl">

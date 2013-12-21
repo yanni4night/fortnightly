@@ -23,6 +23,7 @@ var Template = new Model('template');
 var Article = new Model('article');
 
 ejs.filters.dateFormat=function(unix_time_stamp){
+    if(!+unix_time_stamp)return '';
     var d=new Date(unix_time_stamp);
     return d.getFullYear()+"-"+(1+d.getMonth())+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
 };
