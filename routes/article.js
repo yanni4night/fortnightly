@@ -574,7 +574,7 @@ var ArticleModule = {
             });
         }
 
-        return readability.read(url, function(err, article) {
+        return readability(url, function(err, article) {
             if (err) {
                 return res.json({
                     result: 0,
@@ -582,7 +582,7 @@ var ArticleModule = {
                 });
             }
 
-            var content = article.getContent();
+            var content = article.content||"";
             //nightyin:stupid way
             var summary = (content || "Nothing").replace(/<\/?\w+\s?[\s\S]*?>/img, '');
 
