@@ -53,7 +53,7 @@
                 url:"/article/grab",
                 type:'post',
                 data:$("form").serialize(),
-                beforesend:function(){
+                beforeSend:function(){
                     sending=true;
                     $("#saveBtn").text("Saving");
                 },

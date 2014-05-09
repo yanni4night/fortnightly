@@ -7,7 +7,7 @@
  * @author yinyong#sogou-inc.com
  */
 module.exports={
-    serverURL:"http://ufo:3001",//Current server path.
+    serverURL:"http://fortnightly.ufo.sogou-inc.com",//Current server path.
     emailTitle:"UFO Fortnightly",
     email:"ufo-fortnightly@qq.com",
     smtp:"smtp.qq.com",
